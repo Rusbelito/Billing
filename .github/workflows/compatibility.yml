@@ -1,0 +1,45 @@
+name: Compatibility
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [8.1, 8.2, 8.3, 8.4]  # Versiones de PHP compatibles
+        laravel: ["10", "11", "12"]  # Versiones de Laravel a probar
+        exclude:
+          - php: 8.4
+            laravel: "10"
+          - php: 8.1
+            laravel: "11"
+          - php: 8.1
+            laravel: "12"
+          
+    name: Laravel ${{ matrix.laravel }} - PHP ${{ matrix.php }}
+
+    steps:
+    - uses: shivammathur/setup-php@v2
+      with:
+          php-version: ${{ matrix.php }}
+          tools: composer
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Create Laravel And Install Package
+      run: |
+          composer create-project --prefer-dist laravel/laravel:^${{ matrix.laravel }} test-laravel
+          cd test-laravel
+          composer require "rusbelito/billing"
+          
+          
+    - name: Run Tests
+      run: |
+          cd test-laravel
+          ls -al

@@ -1,0 +1,36 @@
+{
+    "name": "rusbelito/billing",
+    "description": "Modular billing system with subscriptions, consumption, donations and coupons",
+    "version": "1.0.0",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Rusbelito\\Billing\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Rusbelito\\Billing\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Rusbelito"
+        }
+    ],
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require": {
+        "php": "^8.0",
+        "laravel/framework": ">=10.0",
+        "michael-rubel/laravel-couponables": "^9.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Rusbelito\\Billing\\Providers\\BillingServiceProvider"
+            ]
+        }
+    }
+}
