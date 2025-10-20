@@ -1,6 +1,6 @@
 <?php
 
-namespace Vendor\Package\Traits;
+namespace Rusbelito\Billing\Traits;
 
 use Rusbelito\Billing\Models\Subscription;
 use Rusbelito\Billing\Models\Usage;

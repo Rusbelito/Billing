@@ -3,6 +3,7 @@
 namespace Rusbelito\Billing\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Usage extends Model
 {
@@ -15,9 +16,10 @@ class Usage extends Model
 
     protected $casts = [
         'recorded_at' => 'datetime',
+        'quantity' => 'integer',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(config('auth.providers.users.model'));
     }
