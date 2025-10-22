@@ -8,8 +8,12 @@ class BillingServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(\Rusbelito\Billing\Services\BillingService::class, function () {
-            return new \Rusbelito\Billing\Services\BillingService();
+        $this->app->singleton(\Rusbelito\Billing\Services\CouponService::class, function () {
+            return new \Rusbelito\Billing\Services\CouponService();
+        });
+
+        $this->app->singleton(\Rusbelito\Billing\Services\BillingService::class, function ($app) {
+            return new \Rusbelito\Billing\Services\BillingService($app->make(\Rusbelito\Billing\Services\CouponService::class));
         });
     }
 

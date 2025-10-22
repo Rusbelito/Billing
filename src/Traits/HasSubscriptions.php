@@ -4,6 +4,7 @@ namespace Rusbelito\Billing\Traits;
 
 use Rusbelito\Billing\Models\Subscription;
 use Rusbelito\Billing\Models\Usage;
+use Rusbelito\Billing\Models\CouponUsage;
 
 trait HasSubscriptions
 {
@@ -23,5 +24,10 @@ trait HasSubscriptions
     public function usages()
     {
         return $this->hasMany(Usage::class);
+    }
+
+    public function couponUsages()
+    {
+        return $this->hasMany(CouponUsage::class);
     }
 }
