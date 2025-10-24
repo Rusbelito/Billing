@@ -15,12 +15,38 @@ class BillingServiceProvider extends ServiceProvider
         $this->app->singleton(\Rusbelito\Billing\Services\BillingService::class, function ($app) {
             return new \Rusbelito\Billing\Services\BillingService($app->make(\Rusbelito\Billing\Services\CouponService::class));
         });
+
+        $this->app->singleton(\Rusbelito\Billing\Services\TransactionService::class, function ($app) {
+            return new \Rusbelito\Billing\Services\TransactionService($app->make(\Rusbelito\Billing\Services\CouponService::class));
+        });
+
+        $this->app->singleton(\Rusbelito\Billing\Services\InvoiceService::class, function () {
+            return new \Rusbelito\Billing\Services\InvoiceService();
+        });
+
+        $this->app->singleton(\Rusbelito\Billing\Services\PaymentsWayService::class, function () {
+            return new \Rusbelito\Billing\Services\PaymentsWayService();
+        });
+
+        $this->app->singleton(\Rusbelito\Billing\Services\WebhookService::class, function () {
+            return new \Rusbelito\Billing\Services\WebhookService();
+        });
+
+        $this->app->singleton(\Rusbelito\Billing\Services\SubscriptionPaymentService::class, function ($app) {
+            return new \Rusbelito\Billing\Services\SubscriptionPaymentService(
+                $app->make(\Rusbelito\Billing\Services\InvoiceService::class),
+                $app->make(\Rusbelito\Billing\Services\PaymentsWayService::class)
+            );
+        });
     }
 
     public function boot(): void
     {
         // Cargar migraciones desde la ruta correcta
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+        
+        // Cargar rutas
+        $this->loadRoutesFrom(__DIR__ . '/../routes/webhooks.php');
         
         // Publicar configuración
         $this->publishes([

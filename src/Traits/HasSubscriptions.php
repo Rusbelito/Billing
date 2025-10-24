@@ -30,4 +30,39 @@ trait HasSubscriptions
     {
         return $this->hasMany(CouponUsage::class);
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(\Rusbelito\Billing\Models\Transaction::class);
+    }
+
+    public function billingAddresses()
+    {
+        return $this->hasMany(\Rusbelito\Billing\Models\BillingAddress::class);
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(\Rusbelito\Billing\Models\Invoice::class);
+    }
+
+    public function defaultBillingAddress()
+    {
+        return $this->hasOne(\Rusbelito\Billing\Models\BillingAddress::class)->where('is_default', true);
+    }
+
+    public function paymentMethods()
+    {
+        return $this->hasMany(\Rusbelito\Billing\Models\PaymentMethod::class);
+    }
+
+    public function defaultPaymentMethod()
+    {
+        return $this->hasOne(\Rusbelito\Billing\Models\PaymentMethod::class)->where('is_default', true);
+    }
+
+    public function paymentAttempts()
+    {
+        return $this->hasMany(\Rusbelito\Billing\Models\PaymentAttempt::class);
+    }
 }

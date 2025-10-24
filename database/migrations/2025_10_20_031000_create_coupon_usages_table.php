@@ -14,8 +14,8 @@ return new class extends Migration
             $table->foreignId('coupon_id')->constrained('billing_coupons')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             
-            // Referencia a qué se aplicó el cupón
-            $table->morphs('billable'); // Puede ser Subscription, Invoice, etc.
+            // Referencia a qué se aplicó el cupón (NULLABLE)
+            $table->nullableMorphs('billable'); // Puede ser Subscription, Invoice, Transaction, etc.
             
             // Datos del descuento aplicado
             $table->decimal('discount_amount', 10, 2); // Cantidad descontada
