@@ -17,6 +17,7 @@ return new class extends Migration
             $table->enum('type', ['one_time', 'subscription', 'consumption', 'donation'])->default('one_time');
             
             // Referencia a lo que se compró (puede ser un producto, plan, servicio, etc.)
+            // morphs() ya crea el índice automáticamente, no necesitamos agregarlo después
             $table->morphs('purchasable'); // purchasable_type, purchasable_id
             
             // Montos
@@ -38,7 +39,7 @@ return new class extends Migration
             $table->index('user_id');
             $table->index('type');
             $table->index('status');
-            $table->index(['purchasable_type', 'purchasable_id']);
+            // NO agregamos index(['purchasable_type', 'purchasable_id']) porque morphs() ya lo crea
         });
     }
 
