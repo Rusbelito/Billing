@@ -32,7 +32,7 @@ class InvoiceService
     /**
      * Crear factura desde una transacción one-time
      */
-    public function createFromTransaction(Transaction $transaction): Invoice
+    public function createFromTransaction(Transaction $transaction, bool $applyReferralRewards = true): Invoice
     {
         $user = $transaction->user;
         $billingAddress = $user->billingAddresses()->where('is_default', true)->first();
@@ -46,12 +46,25 @@ class InvoiceService
             'issued_at' => now(),
             'subtotal' => $transaction->amount,
             'discount' => $transaction->discount,
-            'tax' => 0, // Calcular si es necesario
+            'tax' => 0,
             'total' => $transaction->total,
             'coupon_id' => $transaction->coupon_id,
             'status' => $transaction->isCompleted() ? 'paid' : 'draft',
             'paid_at' => $transaction->isCompleted() ? now() : null,
         ]);
+
+        // Aplicar recompensas de referidos si está habilitado
+        if ($applyReferralRewards) {
+            $referralService = app(\Rusbelito\Billing\Services\ReferralService::class);
+            $referralDiscount = $referralService->applyRewardsToInvoice($invoice);
+            
+            if ($referralDiscount > 0) {
+                $invoice->update([
+                    'discount' => $invoice->discount + $referralDiscount,
+                    'total' => $invoice->total - $referralDiscount,
+                ]);
+            }
+        }
 
         // Crear ítem de la factura
         InvoiceItem::create([
@@ -76,7 +89,8 @@ class InvoiceService
         Subscription $subscription,
         Carbon $periodStart,
         Carbon $periodEnd,
-        ?string $couponCode = null
+        ?string $couponCode = null,
+        bool $applyReferralRewards = true
     ): Invoice {
         $user = $subscription->user;
         $plan = $subscription->plan;

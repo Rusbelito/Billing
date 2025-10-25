@@ -65,4 +65,31 @@ trait HasSubscriptions
     {
         return $this->hasMany(\Rusbelito\Billing\Models\PaymentAttempt::class);
     }
+
+    // Relaciones de referidos
+    public function referralCode()
+    {
+        return $this->hasOne(\Rusbelito\Billing\Models\ReferralCode::class);
+    }
+
+    public function referrals()
+    {
+        return $this->hasMany(\Rusbelito\Billing\Models\Referral::class, 'referrer_id');
+    }
+
+    public function referredBy()
+    {
+        return $this->hasOne(\Rusbelito\Billing\Models\Referral::class, 'referred_id');
+    }
+
+    public function referralRewards()
+    {
+        return $this->hasMany(\Rusbelito\Billing\Models\ReferralReward::class);
+    }
+
+    public function activeReferralRewards()
+    {
+        return $this->hasMany(\Rusbelito\Billing\Models\ReferralReward::class)
+            ->whereIn('status', ['pending', 'active']);
+    }
 }

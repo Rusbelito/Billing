@@ -38,6 +38,10 @@ class BillingServiceProvider extends ServiceProvider
                 $app->make(\Rusbelito\Billing\Services\PaymentsWayService::class)
             );
         });
+
+        $this->app->singleton(\Rusbelito\Billing\Services\ReferralService::class, function () {
+            return new \Rusbelito\Billing\Services\ReferralService();
+        });
     }
 
     public function boot(): void
@@ -47,6 +51,15 @@ class BillingServiceProvider extends ServiceProvider
         
         // Cargar rutas
         $this->loadRoutesFrom(__DIR__ . '/../routes/webhooks.php');
+        
+        // Registrar comandos
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Rusbelito\Billing\Console\Commands\ChargeSubscriptions::class,
+                \Rusbelito\Billing\Console\Commands\RetryFailedPayments::class,
+                \Rusbelito\Billing\Console\Commands\NotifyExpiringCards::class,
+            ]);
+        }
         
         // Publicar configuración
         $this->publishes([

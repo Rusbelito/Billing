@@ -131,6 +131,17 @@ return [
         'subscription_renewed' => true,
         'subscription_cancelled' => true,
         'card_expiring_soon' => true,
-        'card_expiring_days' => 30, // Notificar 30 días antes
+        'card_expiring_days' => 30,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Referral System
+    |--------------------------------------------------------------------------
+    */
+    'referrals' => [
+        'enabled' => env('BILLING_REFERRALS_ENABLED', true),
+        'auto_create_code' => true, // Crear código automáticamente al registrar usuario
+        'apply_to_invoices' => true, // Aplicar recompensas automáticamente en facturas
     ],
 ];
