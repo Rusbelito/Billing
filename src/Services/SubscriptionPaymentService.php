@@ -5,6 +5,10 @@ namespace Rusbelito\Billing\Services;
 use Rusbelito\Billing\Models\Subscription;
 use Rusbelito\Billing\Models\PaymentAttempt;
 use Rusbelito\Billing\Models\Invoice;
+use Rusbelito\Billing\Mail\PaymentSuccessful;
+use Rusbelito\Billing\Mail\PaymentFailed;
+use Rusbelito\Billing\Mail\SubscriptionCancelled;
+use Rusbelito\Billing\Mail\CardExpiringSoon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
@@ -240,9 +244,8 @@ class SubscriptionPaymentService
      */
     protected function sendPaymentSuccessEmail($user, Invoice $invoice, Subscription $subscription): void
     {
-        // TODO: Implementar email
-        // Mail::to($user)->send(new PaymentSuccessful($invoice, $subscription));
-        
+        Mail::to($user)->send(new PaymentSuccessful($invoice, $subscription));
+
         Log::info('Payment success email queued', [
             'user_id' => $user->id,
             'invoice_id' => $invoice->id,
@@ -254,9 +257,8 @@ class SubscriptionPaymentService
      */
     protected function sendPaymentFailedEmail($user, Invoice $invoice, Subscription $subscription, PaymentAttempt $attempt): void
     {
-        // TODO: Implementar email
-        // Mail::to($user)->send(new PaymentFailed($invoice, $subscription, $attempt));
-        
+        Mail::to($user)->send(new PaymentFailed($invoice, $subscription, $attempt));
+
         Log::info('Payment failed email queued', [
             'user_id' => $user->id,
             'invoice_id' => $invoice->id,
@@ -269,9 +271,8 @@ class SubscriptionPaymentService
      */
     protected function sendSubscriptionCancelledEmail($user, Subscription $subscription): void
     {
-        // TODO: Implementar email
-        // Mail::to($user)->send(new SubscriptionCancelled($subscription));
-        
+        Mail::to($user)->send(new SubscriptionCancelled($subscription));
+
         Log::info('Subscription cancelled email queued', [
             'user_id' => $user->id,
             'subscription_id' => $subscription->id,
@@ -283,9 +284,8 @@ class SubscriptionPaymentService
      */
     protected function sendCardExpiringEmail($user, $paymentMethod): void
     {
-        // TODO: Implementar email
-        // Mail::to($user)->send(new CardExpiringSoon($paymentMethod));
-        
+        Mail::to($user)->send(new CardExpiringSoon($paymentMethod));
+
         Log::info('Card expiring email queued', [
             'user_id' => $user->id,
             'payment_method_id' => $paymentMethod->id,
